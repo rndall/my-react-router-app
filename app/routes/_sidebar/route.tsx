@@ -1,6 +1,6 @@
 import { Form, Link, Outlet } from "react-router";
-import { getContacts } from "../data";
-import type { Route } from "./+types/_sidebar";
+import { getContacts } from "../../data";
+import type { Route } from "../_sidebar/+types/route";
 
 export async function loader() {
   const contacts = await getContacts();
