@@ -2,15 +2,19 @@ import { Form } from "react-router";
 
 import type { ContactRecord } from "../data";
 
-export default function Contact() {
-  const contact = {
-    first: "Your",
-    last: "Name",
-    avatar: "https://placecats.com/200/200",
-    twitter: "your_handle",
-    notes: "Some notes",
-    favorite: true,
-  };
+import { getContact } from "../data";
+import type { Route } from "./+types/_sidebar.contacts.$contactId";
+
+export async function loader({ params }: Route.LoaderArgs) {
+  const contact = await getContact(params.contactId);
+  if (!contact) {
+    throw new Response("Not Found", { status: 404 });
+  }
+  return { contact };
+}
+
+export default function Contact({ loaderData }: Route.ComponentProps) {
+  const { contact } = loaderData;
 
   return (
     <div id="contact">
@@ -54,7 +58,7 @@ export default function Contact() {
             method="post"
             onSubmit={(event) => {
               const response = confirm(
-                "Please confirm you want to delete this record.",
+                "Please confirm you want to delete this record."
               );
               if (!response) {
                 event.preventDefault();
